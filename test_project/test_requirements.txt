@@ -1,0 +1,2 @@
+-r test_requirements_without_django.txt
+Django
