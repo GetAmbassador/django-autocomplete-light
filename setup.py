@@ -1,7 +1,6 @@
 import os
-import sys
 
-from setuptools import setup, find_packages, Command
+from setuptools import setup, find_packages
 
 
 # Utility function to read the README file.
@@ -11,35 +10,6 @@ from setuptools import setup, find_packages, Command
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-
-class RunTests(Command):
-    description = "Run the django test suite from the test_project dir."
-
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        this_dir = os.getcwd()
-        testproj_dir = os.path.join(this_dir, "test_project")
-        os.chdir(testproj_dir)
-        sys.path.append(testproj_dir)
-        from django.core.management import execute_from_command_line
-        os.environ["DJANGO_SETTINGS_MODULE"] = 'test_project.settings'
-        execute_from_command_line(argv=[ __file__, "test",
-                        "autocomplete_light"])
-        os.chdir(this_dir)
-
-if 'sdist' in sys.argv:
-    dir = os.getcwd()
-    os.chdir(os.path.join(dir, 'autocomplete_light'))
-    os.system('django-admin.py compilemessages')
-    os.chdir(dir)
-
 setup(
     name='django-autocomplete-light',
     version='2.3.6',
@@ -47,7 +17,8 @@ setup(
     author='James Pic',
     author_email='jamespic@gmail.com',
     url='http://django-autocomplete-light.rtfd.org',
-    packages=find_packages(),
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False,
     long_description=read('README'),
@@ -58,21 +29,19 @@ setup(
         'six',
     ],
     extras_require={
-        'Tags': 'django-taggit',
-        'Generic m2m': 'django-generic-m2m',
+        'nested': ['django-nested-admin>=3.0.21'],
+        'tags': ['django-taggit'],
+        'genericm2m': ['django-generic-m2m'],
+        'gfk': ['django-querysetsequence>=0.11'],
     },
-    tests_require=[
-        'django',
-        'selenium',
-        'django-cities-light',
-        'mock',
-        'lxml',
-        'cssselect',
-    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
+        'Framework :: Django :: 1.8',
+        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.10',
+        'Framework :: Django :: 1.11',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',

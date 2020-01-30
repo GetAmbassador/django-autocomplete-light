@@ -1,78 +1,40 @@
 sudo: false
+dist: xenial
 language: python
-branches:
-  only:
-  - master
-matrix:
-  allow_failures:
-  - env: TOXENV=py27-djangomaster
-  - env: TOXENV=py34-djangomaster
-python:
-- '3.4'
 env:
   global:
-  - TESTS_SKIP_LIVESERVER=1
-  - TESTS_WEBDRIVER=PhantomJS
-  - PIP_DISABLE_PIP_VERSION_CHECK=true
-  - EXTRAREQ="codecov"
-  matrix:
-  - TOXENV=py27-django17-taggit-genericm2m
-  - TOXENV=py27-django18-taggit-genericm2m-postgresql
-  - TOXENV=py27-django18-taggit-genericm2m-mysql
-  - TOXENV=pypy-djangostable
-  - TOXENV=py27-django18
-  - TOXENV=py27-django18-taggit
-  - TOXENV=py27-django18-taggit-genericm2m TESTS_SKIP_LIVESERVER=
-  - TOXENV=py27-django18-genericm2m
-  - TOXENV=py27-django19 TESTS_SKIP_LIVESERVER=
-  - TOXENV=py27-djangomaster
-  - TOXENV=py34-django17-taggit-genericm2m
-  - TOXENV=py34-django18
-  - TOXENV=py34-django18-taggit
-  - TOXENV=py34-django18-taggit-genericm2m TESTS_SKIP_LIVESERVER=
-  - TOXENV=py34-django18-genericm2m
-  - TOXENV=py34-django19 TESTS_SKIP_LIVESERVER=
-  - TOXENV=py34-djangomaster
-  - TOXENV=checkqa-python2
-  - TOXENV=checkqa
+  - PIP_RETRIES=10
+  - PIP_TIMEOUT=30
+  - BROWSER=firefox
+  - GECKODRIVER=0.24.0
+  - MOZ_HEADLESS=1
+matrix:
+  include:
+    - python: 3.7
+      env: TOXENV=checkqa
+    - python: 3.7
+      env: TOXENV=base-py37-django21-sqlite
 install:
-- mkdir -p bin
-- PATH=$PWD/bin:$PATH
-- PIP_INSTALL=bin/travis_pip_install
-- printf '#!/bin/bash\n' > $PIP_INSTALL
-- declare -f travis_retry >> $PIP_INSTALL
-- printf '\necho "=====\nUsing pip-wrapper for \"$@\"\n=====\n" >&2\n' >> $PIP_INSTALL
-- printf '\nif [ "$1" = "-e" ]; then pip install "$@"; exit $?; fi\n' >> $PIP_INSTALL
-- printf "pip install \"\$@\"\n" >> $PIP_INSTALL
-- chmod +x $PIP_INSTALL
-- sed -i.bak 's/^\[testenv\]/\0\ninstall_command = travis_pip_install {opts} {packages}/'
-  tox.ini
-- diff tox.ini tox.ini.bak && { echo "tox.ini was not changed."; return 1; } || true
-- sed -i.bak 's/whitelist_externals =/\0\n    travis_pip_install/' tox.ini
-- diff tox.ini tox.ini.bak && { echo "tox.ini was not changed."; return 1; } || true
-- cat tox.ini
-- travis_pip_install tox
-- if [ -n "$EXTRAREQ" ]; then travis_pip_install $EXTRAREQ; fi
-- pip freeze
+- travis_retry pip install -U pip
+- travis_retry pip install tox
+- travis_retry pip freeze
+services:
+  - firefox: latest
+before_install:
+  - wget https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER/geckodriver-v$GECKODRIVER-linux64.tar.gz
+  - mkdir -p geckodriver && tar -xzf geckodriver-v$GECKODRIVER-linux64.tar.gz -C geckodriver
+  - export PATH=$(pwd)/geckodriver:$PATH
 before_script:
 - if echo "$TOXENV" | grep mysql; then mysql -e 'create database autocomplete_light_test;';
   fi
 - if echo "$TOXENV" | grep postgresql; then psql -c 'create database autocomplete_light_test;'
   -U postgres; fi
-- RUN_TESTS="tox -- --cov=autocomplete_light autocomplete_light"
-- command -v coveralls && RUN_TESTS="$RUN_TESTS --cov" || true
-before_install:
-- travis_retry pip install -U pip wheel
-- travis_retry npm install phantomjs
-- phantomjs --version
 script:
-- find $HOME/.cache/pip -ls > /tmp/wheelhouse.before
-- "$RUN_TESTS"
-- find $HOME/.cache/pip -ls > /tmp/wheelhouse.after
-- diff /tmp/wheelhouse.before /tmp/wheelhouse.after || true
+- tox -r
 - test -d .tox/$TOXENV/log && cat .tox/$TOXENV/log/*.log || true
 after_success:
-- codecov
+- travis_retry pip install codecov
+- cd test_project && codecov
 notifications:
   irc:
     channels:
@@ -81,18 +43,5 @@ notifications:
     - "%{repository} (%{commit} %{author}) : %{message} %{build_url} %{compare_url}"
 cache:
   directories:
-  - "$HOME/.cache/pip"
-before_cache:
-- rm -f $HOME/.cache/pip/log/debug.log
-deploy:
-  provider: openshift
-  user: jpic@yourlabs.org
-  password:
-    secure: KZ3qy1NuBncXtEE8writve7AJZK1jmuvduwYEjs7rMboHxpHzu6D2BWeMk2aB+xBUUPhjIycRKVq//ZByS5qMqCH1NLsoMQwVp1pW/QwAvAmW/DfBtwESLt26b8OsUtepZkOBpuT3jNTGUZPakQZM1ysGBgGgpayH8dVp9TvGlk=
-  app: dal
-  domain: yourlabs
-  deployment_branch: master
-  skip_cleanup: true
-  on:
-    repo: yourlabs/django-autocomplete-light
-    branch: master
+  - .tox/$TOXENV
+  - $HOME/.cache/pip
