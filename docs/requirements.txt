@@ -1,3 +1,4 @@
-sphinx-better-theme
 django
--r ../test_project/requirements.txt
+django-generic-m2m
+django-taggit
+pycco
