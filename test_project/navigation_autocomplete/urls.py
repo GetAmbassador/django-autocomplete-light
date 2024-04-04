@@ -1,4 +1,4 @@
-from django.conf.urls import re_path
+from django.urls import re_path
 
 from autocomplete_light.compat import url, urls
 from .views import navigation_autocomplete

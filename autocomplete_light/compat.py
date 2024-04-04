@@ -1,11 +1,11 @@
 from django import VERSION
 
 if VERSION < (1, 5):
-    from django.conf.urls.defaults import patterns, url  # noqa
+    from django.urls.defaults import patterns, url  # noqa
 elif VERSION < (1, 8):
-    from django.conf.urls import patterns, url  # noqa
+    from django.urls import patterns, url  # noqa
 else:
-    from django.conf.urls import re_path as url  # noqa
+    from django.urls import re_path as url  # noqa
     patterns = None
 
 
