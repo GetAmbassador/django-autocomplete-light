@@ -20,7 +20,7 @@ try:
     from django.utils.module_loading import import_string
 except ImportError:
     from importlib import import_module
-    from django.utils import six
+    import six
     import sys
 
     def import_string(dotted_path):
