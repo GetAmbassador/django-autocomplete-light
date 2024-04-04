@@ -4,7 +4,7 @@ import autocomplete_light.shortcuts as autocomplete_light
 import six
 from django.core.urlresolvers import reverse
 from django.test import Client, RequestFactory, TestCase
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 try:
     from unittest.mock import Mock, MagicMock, patch

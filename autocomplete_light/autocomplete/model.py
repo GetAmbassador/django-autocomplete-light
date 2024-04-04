@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import six
 from django.db.models import Q
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.db import connection
 
 from ..settings import DEFAULT_SEARCH_FIELDS

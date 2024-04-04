@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.forms.models import modelform_factory
 from django.test import TestCase
 from django.utils import translation
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from ..example_apps.basic.forms import (DjangoCompatMeta, FkModelForm,
                                         GfkModelForm, MtmModelForm,

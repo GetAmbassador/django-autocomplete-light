@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.template import Context, Template
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from ...example_apps.autocomplete_test_case_app.models import Group, User
 from .case import *

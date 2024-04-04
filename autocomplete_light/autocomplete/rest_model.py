@@ -2,7 +2,7 @@ import urllib
 import six
 
 from django import http
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from .model import AutocompleteModel
 

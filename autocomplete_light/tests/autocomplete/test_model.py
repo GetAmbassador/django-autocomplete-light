@@ -4,7 +4,7 @@ import unittest
 import pytest
 
 from django import VERSION
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from autocomplete_light.example_apps.autocomplete_test_case_app.models import (
         NonIntegerPk, SubGroup, CustomSchema, CustomIntegerPk, Caps)

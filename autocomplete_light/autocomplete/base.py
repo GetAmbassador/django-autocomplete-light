@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import six
 from django.urls import reverse, NoReverseMatch
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
