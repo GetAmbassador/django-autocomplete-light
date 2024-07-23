@@ -201,11 +201,11 @@ class AutocompleteBase(AutocompleteInterface):
         Return the value of a choice. This simple implementation returns the
         textual representation.
         """
-        return force_text(choice)
+        return force_str(choice)
 
     def choice_label(self, choice):
         """
         Return the human-readable representation of a choice. This simple
         implementation returns the textual representation.
         """
-        return force_text(choice)
+        return force_str(choice)

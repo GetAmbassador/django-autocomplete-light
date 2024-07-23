@@ -52,7 +52,7 @@ class SelectMultipleHelpTextRemovalMixin(forms.BaseModelForm):
     def __init__(self, *args, **kwargs):
         super(SelectMultipleHelpTextRemovalMixin, self).__init__(*args,
                 **kwargs)
-        msg = force_text(M)
+        msg = force_str(M)
 
         for name, field in self.fields.items():
             widget = field.widget

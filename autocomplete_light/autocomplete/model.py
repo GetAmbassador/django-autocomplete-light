@@ -61,7 +61,7 @@ class AutocompleteModel(object):
         """
         Return the textual representation of the choice by default.
         """
-        return force_text(choice)
+        return force_str(choice)
 
     def order_choices(self, choices):
         """
