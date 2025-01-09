@@ -1,6 +1,6 @@
 import django
 
-from django.conf.urls import include
+from django.urls import include
 from django.views import generic
 from django.contrib import admin
 from autocomplete_light.compat import url, urls

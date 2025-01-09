@@ -74,10 +74,10 @@ Example:
 .. code-block:: python
 
     # Django 1.4 onwards:
-    from django.conf.urls import patterns, url, include
+    from django.urls import patterns, url, include
 
     # Django < 1.4:
-    # from django.conf.urls.default import patterns, url, include
+    # from django.urls.default import patterns, url, include
 
     urlpatterns = patterns('',
         # [...] your url patterns are here

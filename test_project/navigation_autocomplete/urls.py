@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from autocomplete_light.compat import url, urls
 from .views import navigation_autocomplete
 
 urlpatterns = urls([
-    url(r'^$', navigation_autocomplete, name='navigation_autocomplete'),
+    re_path(r'^$', navigation_autocomplete, name='navigation_autocomplete'),
 ])
